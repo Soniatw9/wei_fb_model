@@ -12,15 +12,20 @@ session = ort.InferenceSession(onnx_path)
 print(">> Loaded ONNX model sha256:",
       hashlib.sha256(open(onnx_path,'rb').read()).hexdigest())
 
+# 动态读取模型输入 shape
+input_name  = session.get_inputs()[0].name
+_, C, H, W  = session.get_inputs()[0].shape  # e.g. (1,3,224,224)
+print(f"ONNX input: name={input_name}, shape=({C},{H},{W})")
+
 # 假设你的模型输入是 (1, C, H, W)，输出为 logits or probabilities
 def run_inference(img_path):
     img = cv2.imread(img_path)
-    # TODO: 按你的 SimpleCNN 训练时的预处理做 resize / normalize
-    img = cv2.resize(img, (64, 64))           # 例：调整为 64×64
-    img = img.astype(np.float32) / 255.0      # 例：归一化
-    img = np.transpose(img, (2,0,1))          # HWC → CHW
-    inp = img[np.newaxis, ...]                # 批次维度 (1,C,H,W)
-    outputs = session.run(None, {session.get_inputs()[0].name: inp})
+    # 动态 resize
+    img = cv2.resize(img, (W, H))
+    img = img.astype(np.float32) / 255.0
+    img = np.transpose(img, (2, 0, 1))
+    inp = img[np.newaxis, ...]
+    outputs = session.run(None, {input_name: inp})
     return outputs[0]  # 根据你的输出格式调整
 
 app = Flask(__name__)
