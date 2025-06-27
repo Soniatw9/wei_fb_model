@@ -13,20 +13,18 @@ print(">> Loaded ONNX model sha256:",
       hashlib.sha256(open(onnx_path,'rb').read()).hexdigest())
 
 # 动态读取模型输入 shape
-input_name  = session.get_inputs()[0].name
-_, C, H, W  = session.get_inputs()[0].shape  # e.g. (1,3,224,224)
-print(f"ONNX input: name={input_name}, shape=({C},{H},{W})")
+input_meta = session.get_inputs()[0]
+_, C, H, W = input_meta.shape
+input_name = input_meta.name
 
-# 假设你的模型输入是 (1, C, H, W)，输出为 logits or probabilities
 def run_inference(img_path):
     img = cv2.imread(img_path)
-    # 动态 resize
-    img = cv2.resize(img, (W, H))
+    img = cv2.resize(img, (W, H))       # 用动态的 W、H
     img = img.astype(np.float32) / 255.0
     img = np.transpose(img, (2, 0, 1))
     inp = img[np.newaxis, ...]
     outputs = session.run(None, {input_name: inp})
-    return outputs[0]  # 根据你的输出格式调整
+    return outputs[0]
 
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
