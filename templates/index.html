@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>台灣黑熊辨識 Demo</title>
+</head>
+<body>
+  <h1>台灣黑熊影像辨識</h1>
+
+  <form id="upload-form" method="POST" enctype="multipart/form-data">
+    <input type="file" id="image-input" name="image" accept="image/*" required />
+    <button type="submit">上傳並辨識</button>
+  </form>
+
+  <!-- 顯示上傳前預覽 -->
+  <div>
+    <h3>上傳預覽：</h3>
+    <img id="preview" src="#" style="max-width: 400px; display: none;" />
+  </div>
+
+  <!-- 顯示辨識後結果 -->
+  <div>
+    <h3>辨識結果：</h3>
+    <img id="result" src="#" style="max-width: 400px; display: none;" />
+  </div>
+
+  <script src="{{ url_for('static', filename='preview.js') }}"></script>
+</body>
+</html>
