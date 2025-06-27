@@ -16,9 +16,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 复制项目
 COPY . .
 
-# 暴露 Render PORT
-ENV PORT 10000
+# Render.com 会自动设置 $PORT 环境变量
 EXPOSE 10000
 
-# 启动命令
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:${PORT}", "--workers", "1"]
+# 启动命令，使用 shell form 以支持 $PORT 环境变量
+CMD gunicorn app:app --bind 0.0.0.0:$PORT --workers 1
