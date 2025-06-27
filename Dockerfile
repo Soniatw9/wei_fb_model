@@ -21,4 +21,4 @@ ENV PORT 10000
 EXPOSE 10000
 
 # 启动命令
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000", "--workers", "1"]
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:${PORT}", "--workers", "1"]
