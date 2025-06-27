@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      libgl1 libglib2.0-0 \
+      libgl1-mesa-glx libglib2.0-0 \
       # 以下为可选但常见的 OpenCV 依赖
       libsm6 libxrender1 libxext6 && \
     rm -rf /var/lib/apt/lists/*
